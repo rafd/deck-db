@@ -7,21 +7,15 @@
 
 (defonce pixels (r/atom (vec (repeat img-codec/pixel-count 0))))
 
-(def ^:private cell-px 24)
-(def ^:private gap-px 0)
-
 (defn- pixel-grid []
   (r/with-let
    [*drawing (r/atom nil)]
    (let [ps @pixels]
      [:div
-      {:style {:display "inline-grid"
-               :grid-template-columns (str "repeat(" img-codec/img-size ", " cell-px "px)")
-               :grid-template-rows (str "repeat(" img-codec/img-size ", " cell-px "px)")
-               :gap (str gap-px "px")
-               :user-select "none"
-               :-webkit-user-select "none"
-               :cursor "crosshair"}
+      {:style (merge (ui/pixel-grid-base-style img-codec/img-size)
+                     {:user-select "none"
+                      :-webkit-user-select "none"
+                      :cursor "crosshair"})
        :on-mouse-up (fn [_] (reset! *drawing nil))
        :on-mouse-leave (fn [_] (reset! *drawing nil))}
       (for [i (range img-codec/pixel-count)]
@@ -53,13 +47,8 @@
           :on-click (fn [_] (reset! pixels (vec (repeat img-codec/pixel-count 0))))}
          "Clear"]]
        [pixel-grid]]]
+
      [ui/arrow]
      [h/out-view perm]
      [:div {:class "overflow-x-auto"}
-      [:div
-       {:class "flex flex-wrap"
-        :style {:gap (str ui/card-gap-px "px")
-                :width (str ui/width "px")}}
-       (for [[pos card-idx] (map-indexed vector perm)]
-         ^{:key pos}
-         [ui/card-img card-idx])]]]))
+      [ui/card-grid perm]]]))

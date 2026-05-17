@@ -21,6 +21,21 @@
 (def width (+ (* 13 card-width-px)
               (* 12 card-gap-px)))
 
+(def img-cell-px 24)
+(def img-gap-px 0)
+
+(def textarea-class
+  (str "w-full bg-white rounded-md "
+       "p-3 text-black font-mono text-base leading-relaxed "
+       "resize-none focus:outline-none focus:border-[" color-highlight "] "
+       "placeholder-[" color-input-placeholder "]"))
+
+(defn pixel-grid-base-style [img-size]
+  {:display "inline-grid"
+   :grid-template-columns (str "repeat(" img-size ", " img-cell-px "px)")
+   :grid-template-rows (str "repeat(" img-size ", " img-cell-px "px)")
+   :gap (str img-gap-px "px")})
+
 (defn card-img [card-idx]
   (let [card (nth cards/all-cards card-idx)
         path (cards/image-path card)]
@@ -79,6 +94,15 @@
                              (do-drop! @*dragging-pos to)
                              (reset! *dragging-pos nil)))}
           [card-img card-idx]])])))
+
+(defn card-grid [perm]
+  [:div
+   {:class "flex flex-wrap"
+    :style {:gap (str card-gap-px "px")
+            :width (str width "px")}}
+   (for [[pos card-idx] (map-indexed vector perm)]
+     ^{:key pos}
+     [card-img card-idx])])
 
 (defn blackboard [& children]
   (into [:div {:class (str "bg-[" color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}]

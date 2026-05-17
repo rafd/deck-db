@@ -16,25 +16,13 @@
                   (when over? "text-red-400"))}
      [:span  n " / " limit]]))
 
-(defn- card-grid [perm]
-  [:div
-   {:class "flex flex-wrap"
-    :style {:gap (str ui/card-gap-px "px")
-            :width (str ui/width "px")}}
-   (for [[pos card-idx] (map-indexed vector perm)]
-     ^{:key pos}
-     [ui/card-img card-idx])])
-
 (defn tab []
   (let [t    @text
         perm (codec/encode t)]
     [:div {:class "space-y-2"}
      [:div
       [:textarea
-       {:class (str "w-full bg-white rounded-md "
-                    "p-3 text-black font-mono text-base leading-relaxed "
-                    "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
-                    "placeholder-[" ui/color-input-placeholder "]")
+       {:class ui/textarea-class
         :rows 2
         :placeholder "Type a message… "
         :value t
@@ -49,4 +37,4 @@
      [ui/arrow]
      [h/out-view perm]
      [:div {:class "overflow-x-auto"}
-      [card-grid perm]]]))
+      [ui/card-grid perm]]]))

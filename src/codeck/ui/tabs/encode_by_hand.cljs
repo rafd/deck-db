@@ -30,10 +30,7 @@
    [:div {:class "space-y-4"}
     [bhc/step-header "Step 1" "Write Your Message"]
 
-    [:input {:class (str "w-full bg-white rounded-md "
-                         "p-3 text-black font-mono text-base leading-relaxed "
-                         "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
-                         "placeholder-[" ui/color-input-placeholder "]")
+    [:input {:class ui/textarea-class
              :value @*example-text
              :on-change (fn [e]
                           (->> (.. e -target -value)

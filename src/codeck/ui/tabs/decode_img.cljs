@@ -8,15 +8,9 @@
 (defonce perm (r/atom (vec (range img-codec/deck-size))))
 (defonce deck-str-input (r/atom (h/perm->str (vec (range img-codec/deck-size)))))
 
-(def ^:private cell-px 24)
-(def ^:private gap-px 0)
-
 (defn- pixel-display [pixels]
   [:div
-   {:style {:display "inline-grid"
-            :grid-template-columns (str "repeat(" img-codec/img-size ", " cell-px "px)")
-            :grid-template-rows (str "repeat(" img-codec/img-size ", " cell-px "px)")
-            :gap (str gap-px "px")}}
+   {:style (ui/pixel-grid-base-style img-codec/img-size)}
    (for [i (range img-codec/pixel-count)]
      ^{:key i}
      [:div

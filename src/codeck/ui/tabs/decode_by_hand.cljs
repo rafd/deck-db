@@ -166,8 +166,5 @@
        {:read-only true
         :rows 1
         :value message
-        :class (str "w-full bg-white rounded-md "
-                    "p-3 text-black font-mono text-base leading-relaxed "
-                    "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
-                    "placeholder-[" ui/color-input-placeholder "]")}]
+        :class ui/textarea-class}]
       ]]))
