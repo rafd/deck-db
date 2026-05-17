@@ -1,4 +1,4 @@
-(ns deck-db.tabs.encode
+(ns deck-db.ui.tabs.encode
   (:require
    [reagent.core :as r]
    [deck-db.codec :as codec]

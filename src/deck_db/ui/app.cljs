@@ -2,10 +2,10 @@
   (:require
    [reagent.core :as r]
    [deck-db.ui.common :as ui]
-   [deck-db.tabs.decode :as tab-decode]
-   [deck-db.tabs.decode-by-hand :as tab-decode-by-hand]
-   [deck-db.tabs.encode :as tab-encode]
-   [deck-db.tabs.encode-by-hand :as tab-encode-by-hand]))
+   [deck-db.ui.tabs.decode :as tab-decode]
+   [deck-db.ui.tabs.decode-by-hand :as tab-decode-by-hand]
+   [deck-db.ui.tabs.encode :as tab-encode]
+   [deck-db.ui.tabs.encode-by-hand :as tab-encode-by-hand]))
 
 (defonce active-tab-id (r/atom :tab/encode))
 

@@ -1,9 +1,9 @@
-(ns deck-db.tabs.encode-by-hand
+(ns deck-db.ui.tabs.encode-by-hand
   (:require
    [clojure.string :as str]
    [reagent.core :as r]
    [deck-db.codec :as codec]
-   [deck-db.tabs.by-hand-common :as bhc]
+   [deck-db.ui.tabs.by-hand-common :as bhc]
    [deck-db.ui.common :as ui]))
 
 (def *example-text (r/atom "Hello, world!"))

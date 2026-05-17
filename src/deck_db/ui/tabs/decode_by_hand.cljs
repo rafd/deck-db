@@ -1,8 +1,8 @@
-(ns deck-db.tabs.decode-by-hand
+(ns deck-db.ui.tabs.decode-by-hand
   (:require
    [reagent.core :as r]
    [deck-db.codec :as codec]
-   [deck-db.tabs.by-hand-common :as bhc]
+   [deck-db.ui.tabs.by-hand-common :as bhc]
    [deck-db.ui.common :as ui]
    [deck-db.ui.deck-hash :as h]))
 
