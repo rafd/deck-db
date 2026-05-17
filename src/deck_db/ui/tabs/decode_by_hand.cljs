@@ -94,7 +94,7 @@
      [:p {:class "text-sm mb-1"}
       "Look up each digit in the charset table above to get your " codec/max-chars " characters."]
      [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
-      "Trim any trailing spaces — that is your decoded message."]]]
+      "Trim any leading spaces — that is your decoded message."]]]
 
    [bhc/section-header "Example: decoding \"Hello, world!\""]
 

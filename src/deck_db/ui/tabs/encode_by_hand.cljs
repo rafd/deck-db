@@ -42,7 +42,7 @@
 
     [:p {:class (str "text-[" ui/color-text "]")}
      "Use only characters from the table below. Maximum " codec/max-chars " characters. "
-     "Pad to exactly " codec/max-chars " characters by appending spaces on the right."]
+     "Pad to exactly " codec/max-chars " characters by prepending spaces on the left."]
 
     [bhc/charset-table]]
 
@@ -56,45 +56,51 @@
 
     [ui/blackboard
      [:table {:class "text-xs font-mono border-collapse"}
+      [:thead
+       [:tr
+        [:th {:class (str "text-left text-[" ui/color-text-muted "] pb-2 pr-4 font-normal")} "Char"]
+        [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 pr-4 font-normal whitespace-nowrap")} "Index"]]]
       [:tbody
        (map-indexed
         (fn [i [c idx]]
           ^{:key i}
           [:tr
-           [:td {:class (str "text-[" ui/color-text-muted "] text-center px-2 py-1")} i]
-           [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1")} (bhc/display-char c)]
-           [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1 tabular-nums")} idx]])
-        (map vector (:padded @*ex) (:char-indices @*ex)))]]]]
+           [:td {:class (str "text-[" ui/color-text-secondary "] text-right px-2 py-1")} (bhc/display-char c)]
+           [:td {:class (str "text-[" ui/color-text-accent "] text-right px-2 py-1 tabular-nums")} idx]])
+        (->> (map vector (:padded @*ex) (:char-indices @*ex))
+             (drop-while (fn [[c _]] (= c \space)))))]]]]
 
    ;; STEP 3 ---
 
    [:div {:class "space-y-4"}
     [bhc/step-header "Step 3" "Compute the Permutation Number"]
-    [:p "Treat the digits as a base-" codec/charset-size " number, most significant first."]
+    [:p "Treat the digits as a base-" codec/charset-size " number:"]
 
     [ui/blackboard
      [:table {:class "text-xs font-mono border-collapse"}
       [:thead
        [:tr
         [:th {:class (str "text-left text-[" ui/color-text-muted "] pb-2 pr-4 font-normal")} "Char"]
-        [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 pr-4 font-normal whitespace-nowrap")} "Char Index"]
+        [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 pr-4 font-normal whitespace-nowrap")} "Index"]
         [:th]
         [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 pr-4 font-normal")} "Power"]
-        [:th {:class (str "text-left text-[" ui/color-text-muted "] pb-2 font-normal")} "Value"]]]
+        [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 font-normal")} "Value"]]]
       [:tbody
        (for [{:keys [char idx exp contribution]} @*ex-bigint-steps]
          ^{:key exp}
          [:tr
           [:td {:class (str "text-[" ui/color-text-secondary "] py-0.5 pr-4")} (bhc/display-char char)]
           [:td {:class (str "text-right text-[" ui/color-text-secondary "] py-0.5 pr-4 tabular-nums")} idx]
-          [:td {:Class "py-0.5"} "×"]
+          [:td {:class "py-0.5"} "×"]
           [:td {:class (str "text-right text-[" ui/color-text-accent "] py-0.5 pr-4")}
            (str codec/charset-size (bhc/sup exp))]
-          [:td {:class (str "text-[" ui/color-text-secondary "] py-0.5 text-right")} contribution]])]]]
+          [:td {:class (str "text-[" ui/color-text-secondary "] py-0.5 text-right w-full")} contribution]])]]]
 
     [ui/blackboard
-     [:div {:class "text-xs text-right"}
-      (:N @*ex)]]]
+     [:div {:class "text-xs text-right flex"}
+      [:span "Sum = "]
+      [:span {:class "grow"}]
+      [:span (:N @*ex)]]]]
 
    ;; STEP 4 ---
 

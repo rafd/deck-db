@@ -72,7 +72,8 @@
 ;; Encode text as a base-(count charset) big integer (max-chars digits, space-padded)
 (defn- text->bigint [text]
   (let [base   (bi (count charset))
-        padded (subs (str text (apply str (repeat max-chars " "))) 0 max-chars)]
+        s      (str (apply str (repeat max-chars " ")) text)
+        padded (subs s (- (count s) max-chars))]
     (reduce
      (fn [acc ch]
        (bi+ (bi* acc base) (bi (get char->idx ch 0))))
@@ -123,7 +124,7 @@
          reverse
          (map #(nth idx->char %))
          (apply str)
-         str/trimr)))
+         str/triml)))
 
 (defn- bi->str [n]
   #?(:clj  (str n)
@@ -155,7 +156,8 @@
   "Return intermediate values for encoding text.
    Keys: :padded :char-indices :N :lehmer-digits :perm"
   [text]
-  (let [padded    (subs (str text (apply str (repeat max-chars " "))) 0 max-chars)
+  (let [s         (str (apply str (repeat max-chars " ")) text)
+        padded    (subs s (- (count s) max-chars))
         char-idxs (mapv (fn [ch] (get char->idx ch 0)) padded)
         N         (text->bigint text)]
     (loop [n      N
@@ -207,7 +209,7 @@
         char-idxs (vec (reverse digits))
         text      (->> (map #(nth idx->char %) char-idxs)
                        (apply str)
-                       str/trimr)]
+                       str/triml)]
     {:lehmer-digits lehmer
      :N (bi->str N)
      :char-indices char-idxs
@@ -222,7 +224,7 @@
    (map-indexed
     (fn [i ch]
       (let [idx    (get char->idx ch 0)
-            exp    (- max-chars 1 i)
+            exp    (- (count text) 1 i)
             contrib (bi* (bi idx) (nth base-powers exp))]
         {:char ch
          :idx idx
