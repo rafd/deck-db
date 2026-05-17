@@ -9,7 +9,7 @@
 (def values ["A" "2" "3" "4" "5" "6" "7" "8" "9" "10" "J" "Q" "K"])
 
 (defn display-char [c]
-  (if (= c \space) "·" (str c)))
+  (if (= c \space) " " (str c)))
 
 (defn idx->card-name [idx]
   (let [suit-idx (quot idx 13)
@@ -28,29 +28,41 @@
 (defn sub [n] (num->unicode sub-chars n))
 
 (defn charset-table []
-  (let [cols 8
-        rows (partition cols (map-indexed vector codec/charset))]
-    [:table {:class "text-xs font-mono border-collapse mb-4"}
-     [:tbody
-      (for [[ri row] (map-indexed vector rows)]
-        ^{:key ri}
-        [:tr
-         (for [[idx c] row]
-           ^{:key idx}
-           [:<>
-            [:td {:class (str "text-[" ui/color-text-muted "] text-right pr-1 py-0.5 tabular-nums select-none")} (str idx)]
-            [:td {:class (str "text-[" ui/color-text-accent "] pl-1 pr-5 py-0.5 tabular-nums")} (display-char c)]])])]]))
+  (let [indexed (vec (map-indexed vector codec/charset))
+        total (count indexed)
+        num-rows 10
+        num-cols (Math/ceil (/ total num-rows))]
+    [ui/blackboard
+     [:table {:class "text-sm font-mono border-collapse"}
+      [:tbody
+       (for [ri (range num-rows)]
+         ^{:key ri}
+         [:tr
+          (for [ci (range num-cols)
+                :let [i (+ (* ci num-rows) ri)]
+                :when (< i total)]
+            (let [[idx c] (nth indexed i)]
+              ^{:key idx}
+              [:<>
+               [:td {:class (str "text-[" ui/color-text-muted "] text-right pr-1 py-0.5 tabular-nums select-none")} (str idx)]
+               [:td {:class (str "text-[" ui/color-text "] pl-1 pr-7 py-0.5 tabular-nums")} (display-char c)]]))])]]]))
 
 (defn section-header [title]
   [:h2
    {:class (str "text-[" ui/color-highlight "] text-lg font-bold mt-6 mb-3 border-b border-[" ui/color-border "] pb-1")}
    title])
 
+(defn step-header [h1 h2]
+  [:h2 {:class (str "font-bold text-lg mt-6 mb-3 border-b border-[" ui/color-border "] pb-1")}
+   [:span {:class (str "text-[" ui/color-highlight "]")} h1 ":"]
+   " "
+   [:span {:class (str "text-[" ui/color-text "]")} h2 ]])
+
 (defn step-num [n]
   [:span {:class (str "text-[" ui/color-highlight "] font-bold")} (str "Step " n ": ")])
 
 (defn card-index-table []
-  [:div {:class "overflow-x-auto mb-4"}
+  [ui/blackboard
    [:table {:class "text-xs font-mono border-collapse"}
     [:thead
      [:tr

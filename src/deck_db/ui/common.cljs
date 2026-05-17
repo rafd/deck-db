@@ -8,7 +8,7 @@
 (def color-bg-dark "#0d3d03")
 (def color-border "#333")
 (def color-text "#fff")
-(def color-text-secondary "#ddd")
+(def color-text-secondary "#fff")
 (def color-text-muted "#999")
 (def color-text-accent "#7ea974")
 (def color-highlight "#c8a84b")

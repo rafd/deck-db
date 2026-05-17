@@ -1,21 +1,21 @@
 (ns deck-db.tabs.encode-by-hand
   (:require
    [clojure.string :as str]
+   [reagent.core :as r]
    [deck-db.codec :as codec]
    [deck-db.tabs.by-hand-common :as bhc]
    [deck-db.ui.common :as ui]))
 
-(def ^:private example-text "Hello, world!")
-(def ^:private ex (codec/encode-steps example-text))
-(def ^:private ex-msg-len (count example-text))
-(def ^:private ex-pad-len (- codec/max-chars ex-msg-len))
+(def *example-text (r/atom "Hello, world!"))
+(def *ex (r/reaction (codec/encode-steps @*example-text)))
+(def *ex-bigint-steps (r/reaction (codec/text->bigint-steps @*example-text)))
+(def *ex-msg-len (r/reaction (count @*example-text)))
+(def *ex-pad-len (r/reaction (- codec/max-chars @*ex-msg-len)))
 
 (defn tab []
   [:div {:class (str "text-[" ui/color-text-secondary "] pb-10 font-mono")}
 
-   [bhc/section-header "How to Encode a Message by Hand"]
-
-   [:p {:class "text-sm mb-3"}
+   [:p {:class "mb-3"}
     "A " codec/deck-size "-card deck has " codec/deck-size "! ≈ 8×10⁶⁷ possible orderings. With a character set of " codec/charset-size " characters, that's enough to store a message of up to "
     [:strong {:class "text-white"} codec/max-chars " characters"]
     " (" "log(" codec/deck-size "!)" "/" "log(" codec/charset-size ") ≈ " codec/max-chars ")"
@@ -23,138 +23,133 @@
     ". The encoding converts a message into an integer in base " codec/charset-size ", then uses the "
     [:a {:class "underline"
          :href "https://en.wikipedia.org/wiki/Factorial_number_system"} "factorial number system"]
-     " to map that integer to a unique card ordering."]
+    " to map that integer to a unique card ordering."]
 
-   [bhc/section-header "Reference: Character → Index"]
-   [:p {:class (str "text-[" ui/color-text-muted "] text-xs mb-2")}
-    codec/charset-size " characters, indices 0–" (dec codec/charset-size) ". Space is shown as ·"]
-   [bhc/charset-table]
+   ;; STEP 1 ---
 
-   [bhc/section-header "Reference: Card → Index"]
-   [bhc/card-index-table]
+   [:div {:class "space-y-4"}
+    [bhc/step-header "Step 1" "Write Your Message"]
 
-   [bhc/section-header "Steps"]
+    [:input {:class (str "w-full bg-white rounded-md "
+                         "p-3 text-black font-mono text-base leading-relaxed "
+                         "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
+                         "placeholder-[" ui/color-input-placeholder "]")
+             :value @*example-text
+             :on-change (fn [e]
+                          (->> (.. e -target -value)
+                               codec/sanitize
+                               (reset! *example-text)))}]
 
-   [:div {:class "space-y-5"}
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 1] "Write out your message"]
-     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
-      "Use only characters from the table above. Maximum " codec/max-chars " characters. "
-      "Pad to exactly " codec/max-chars " characters by appending spaces on the right."]]
+    [:p {:class (str "text-[" ui/color-text "]")}
+     "Use only characters from the table below. Maximum " codec/max-chars " characters. "
+     "Pad to exactly " codec/max-chars " characters by appending spaces on the right."]
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 2] "Convert each character to its index"]
-     [:p {:class "text-sm mb-1"}
-      "Look up each of your " codec/max-chars " characters in the charset table above. "
-      "Call the resulting numbers d₀, d₁, …, d" (bhc/sub (dec codec/max-chars))
-      " (each is 0–" (dec codec/charset-size) "). "
-      "Padded spaces become 0."]
-     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
-      "Example: 'H' → " (get codec/char->idx \H)
-      ",  'i' → " (get codec/char->idx \i)
-      ",  ' ' → 0"]]
+    [bhc/charset-table]]
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 3] "Build a big integer N from those " codec/max-chars " digits"]
-     [:p {:class "text-sm mb-2"}
-      "Treat the digits as a base-" codec/charset-size " number, most significant first:"]
-     [bhc/formula (str "N = d₀ × " codec/charset-size (bhc/sup (dec codec/max-chars))
-                       "  +  d₁ × " codec/charset-size (bhc/sup (- codec/max-chars 2))
-                       "  +  …  +  d" (bhc/sub (dec codec/max-chars))
-                       " × " codec/charset-size "⁰")]
-     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
-      "N can reach ~8×10⁶⁷."]]
+   ;; STEP 2 ---
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 4] "Convert N to a card ordering (factoradic)"]
-     [:p {:class "text-sm mb-2"}
-      "Start with a list of all " codec/deck-size " card indices in order:"]
-     [bhc/formula (str "available = [0, 1, 2, 3, …, " (dec codec/deck-size) "]")]
-     [:p {:class "text-sm mb-1"} "For each of the " codec/deck-size " deck positions (first to last):"]
-     [:ol {:class "text-sm list-none space-y-1 pl-2 mb-2"}
-      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "a. "]
-       "Divide N by (remaining_count − 1)!  →  write down quotient d and remainder r"]
-      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "b. "]
-       "The card at position d (0-indexed) in "
-       [:code {:class (str "text-[" ui/color-text-accent "] font-mono text-xs")} "available"]
-       " goes next in your deck"]
-      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "c. "]
-       "Remove that card from "
-       [:code {:class (str "text-[" ui/color-text-accent "] font-mono text-xs")} "available"]]
-      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "d. "]
-       "Set N = r and repeat for the next position"]]
-     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
-      "First iteration uses " (dec codec/deck-size) "!, second uses " (- codec/deck-size 2) "!, …, last uses 0! = 1."]]
+   [:div {:class "space-y-4"}
+    [bhc/step-header "Step 2" "Convert to Indexes"]
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 5] "Arrange a physical deck in that order"]
-     [:p {:class "text-sm"}
-      "Convert each card index back to a card name using the reference table above "
-      "and arrange the deck. That ordering now encodes your message."]]]
+    [:p {:class (str "text-[" ui/color-text "]")}
+     "Look up each of your " codec/max-chars " characters in the charset table above. "]
 
-   [bhc/section-header "Example: \"Hello, world!\""]
+    [ui/blackboard
+     [:table {:class "text-xs font-mono border-collapse"}
+      [:tbody
+       (map-indexed
+        (fn [i [c idx]]
+          ^{:key i}
+          [:tr
+           [:td {:class (str "text-[" ui/color-text-muted "] text-center px-2 py-1")} i]
+           [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1")} (bhc/display-char c)]
+           [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1 tabular-nums")} idx]])
+        (map vector (:padded @*ex) (:char-indices @*ex)))]]]]
 
-   [:div {:class "space-y-5"}
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 1] "Padded to " codec/max-chars " characters (+" ex-pad-len " spaces):"]
-     [bhc/code-block (apply str (map bhc/display-char (:padded ex)))]]
+   ;; STEP 3 ---
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 2] "Character → index:"]
-     [ui/blackboard
-      [:table {:class "text-xs font-mono border-collapse"}
-       [:tbody
-        [:tr
-         (map-indexed
-          (fn [i c]
-            ^{:key i}
-            [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1")} (bhc/display-char c)])
-          (:padded ex))]
-        [:tr
-         (map-indexed
-          (fn [i idx]
-            ^{:key i}
-            [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1 tabular-nums")} idx])
-          (:char-indices ex))]]]]
+   [:div {:class "space-y-4"}
+    [bhc/step-header "Step 3" "Compute the Permutation Number"]
+    [:p "Treat the digits as a base-" codec/charset-size " number, most significant first."]
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 3] "Big integer N:"]
-     [bhc/code-block (str "N = " (:N ex))]]
+    [ui/blackboard
+     [:table {:class "text-xs font-mono border-collapse"}
+      [:thead
+       [:tr
+        [:th {:class (str "text-left text-[" ui/color-text-muted "] pb-2 pr-4 font-normal")} "Char"]
+        [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 pr-4 font-normal whitespace-nowrap")} "Char Index"]
+        [:th]
+        [:th {:class (str "text-right text-[" ui/color-text-muted "] pb-2 pr-4 font-normal")} "Power"]
+        [:th {:class (str "text-left text-[" ui/color-text-muted "] pb-2 font-normal")} "Value"]]]
+      [:tbody
+       (for [{:keys [char idx exp contribution]} @*ex-bigint-steps]
+         ^{:key exp}
+         [:tr
+          [:td {:class (str "text-[" ui/color-text-secondary "] py-0.5 pr-4")} (bhc/display-char char)]
+          [:td {:class (str "text-right text-[" ui/color-text-secondary "] py-0.5 pr-4 tabular-nums")} idx]
+          [:td {:Class "py-0.5"} "×"]
+          [:td {:class (str "text-right text-[" ui/color-text-accent "] py-0.5 pr-4")}
+           (str codec/charset-size (bhc/sup exp))]
+          [:td {:class (str "text-[" ui/color-text-secondary "] py-0.5 text-right")} contribution]])]]]
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 4] "Factoradic → card ordering:"]
-     [ui/blackboard
-      [:table {:class "text-xs font-mono border-collapse"}
-       [:tbody
-        [:tr
-         (map-indexed
-          (fn [i _]
-            ^{:key i}
-            [:td {:class (str "text-[" ui/color-text-muted "] text-center px-2 py-1")} (str "L" (bhc/sub i))])
-          (range codec/deck-size))]
-        [:tr
-         (map-indexed
-          (fn [i d]
-            ^{:key i}
-            [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1 tabular-nums")} d])
-          (:lehmer-digits ex))]
-        [:tr
-         (map-indexed
-          (fn [i card-idx]
-            ^{:key i}
-            [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1")} (bhc/idx->card-name card-idx)])
-          (:perm ex))]]]]
+    [ui/blackboard
+     [:div {:class "text-xs text-right"}
+      (:N @*ex)]]]
 
-    [:div
-     [:p {:class "text-sm mb-1"}
-      [bhc/step-num 5] "Full deck ordering:"]
-     [bhc/code-block (str/join "  " (map bhc/idx->card-name (:perm ex)))]]]]]])
+   ;; STEP 4 ---
+
+   [:div {:class "space-y-4"}
+    [bhc/step-header "Step 4" "Convert to a Factoradic Base"]
+
+    [:p {:class "mb-2"}
+     "Start with a list of all " codec/deck-size " card indices in order:"]
+
+    [bhc/formula (str "available = [0, 1, 2, 3, …, " (dec codec/deck-size) "]")]
+
+    [:p {:class "mb-1"} "For each of the " codec/deck-size " deck positions (first to last):"]
+    [:ol {:class "list-none space-y-1 pl-2 mb-2"}
+     [:li [:span {:class (str "text-[" ui/color-highlight "]")} "a. "]
+      "Divide N by (remaining_count − 1)!  →  write down quotient d and remainder r"]
+     [:li [:span {:class (str "text-[" ui/color-highlight "]")} "b. "]
+      "The card at position d (0-indexed) in "
+      [:code {:class (str "text-[" ui/color-text-accent "] font-mono text-xs")} "available"]
+      " goes next in your deck"]
+     [:li [:span {:class (str "text-[" ui/color-highlight "]")} "c. "]
+      "Remove that card from "
+      [:code {:class (str "text-[" ui/color-text-accent "] font-mono text-xs")} "available"]]
+     [:li [:span {:class (str "text-[" ui/color-highlight "]")} "d. "]
+      "Set N = r and repeat for the next position"]]
+    [:p {:class (str "text-[" ui/color-text-muted "]")}
+     "First iteration uses " (dec codec/deck-size) "!, second uses " (- codec/deck-size 2) "!, …, last uses 0! = 1."]
+
+    [ui/blackboard
+     [:table {:class "text-xs font-mono border-collapse"}
+      [:tbody
+       (map-indexed
+        (fn [i [d card-idx]]
+          ^{:key i}
+          [:tr
+           [:td {:class (str "text-[" ui/color-text-muted "] text-right px-2 py-1")} (str "L" (bhc/sub i))]
+           [:td {:class (str "text-[" ui/color-text-secondary "] text-right px-2 py-1 tabular-nums")} d]])
+        (map vector (:lehmer-digits @*ex) (:perm @*ex)))]]]]
+
+   ;; STEP 5 ---
+
+   [:div {:class "space-y-4"}
+    [bhc/step-header "Step 5" "Arrange a Physical Deck"]
+    [:p {:class ""}
+     "Convert each card index back to a card name using the reference table below "
+     "and arrange the deck."]
+
+    [bhc/card-index-table]
+
+    [ui/blackboard
+     [:table {:class "text-xs font-mono border-collapse"}
+      [:tbody
+       (map-indexed
+        (fn [i [d card-idx]]
+          ^{:key i}
+          [:tr
+           [:td {:class (str "text-[" ui/color-text-secondary "] px-2 py-1 tabular-nums text-right")} d]
+           [:td {:class (str "text-[" ui/color-text-accent "] px-2 py-1 text-right")} (bhc/idx->card-name card-idx)]])
+        (map vector (:lehmer-digits @*ex) (:perm @*ex)))]]]]])

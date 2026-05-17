@@ -52,6 +52,14 @@
         log-base       (Math/log charset-size)]
     (int (Math/floor (/ log-deck-perms log-base)))))
 
+;; base-powers[k] = charset-size^k  (indices 0..max-chars)
+(def ^:private base-powers
+  (reduce
+   (fn [acc _]
+     (conj acc (bi* (peek acc) (bi charset-size))))
+   [(bi 1)]
+   (range max-chars)))
+
 (defn- find-idx
   "Linear search: index of x in vector v, or -1."
   [v x]
@@ -205,7 +213,25 @@
      :char-indices char-idxs
      :text text}))
 
+(defn text->bigint-steps
+  "Return per-character contribution data for the text→BigInt conversion.
+   One entry per character in text (not padding).
+   Each map: {:char :idx :exp :contribution}"
+  [text]
+  (vec
+   (map-indexed
+    (fn [i ch]
+      (let [idx    (get char->idx ch 0)
+            exp    (- max-chars 1 i)
+            contrib (bi* (bi idx) (nth base-powers exp))]
+        {:char ch
+         :idx idx
+         :exp exp
+         :contribution (bi->str contrib)}))
+    text)))
+
 #_(encode "Hello World")
 #_(decode (encode "Hello World"))
 #_(encode-steps "Hello, world!")
 #_(decode-steps (encode "Hello, world!"))
+#_(text->bigint-steps "H")
