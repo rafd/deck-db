@@ -19,6 +19,12 @@
                     :asset-path           "js/out"
                     :output-to            "resources/public/js/main.js"
                     :output-dir           "resources/public/js/out"
-                    :source-map-timestamp true}}]}
+                    :source-map-timestamp true}}
+    {:id           "prod"
+     :source-paths ["src"]
+     :compiler     {:main          deck-db.core
+                    :output-to     "resources/public/js/main.js"
+                    :optimizations :advanced
+                    :pretty-print  false}}]}
 
   :figwheel {:server-port 3449})

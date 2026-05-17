@@ -50,11 +50,11 @@
    {:class "text-center p-10"}
    [:div
     [:div {:class "relative"}
-     [:img {:src "/cards/card_back.png"
+     [:img {:src "cards/card_back.png"
             :class "absolute top-0 left-0"}]
-     [:img {:src "/cards/card_back.png"
+     [:img {:src "cards/card_back.png"
             :class "absolute top-2 left-2"}]
-     [:img {:src "/cards/card_joker_red.png"
+     [:img {:src "cards/card_joker_red.png"
             :class "absolute top-4 left-4"}]]
    [:h1
     {:class "text-5xl tracking-wider text-[#fff]"}

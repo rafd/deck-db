@@ -18,4 +18,4 @@
 ;; Index 51 = spades/K
 
 (defn image-path [{:keys [suit value]}]
-  (str "/cards/card_" suit "_" value ".png"))
+  (str "cards/card_" suit "_" value ".png"))
