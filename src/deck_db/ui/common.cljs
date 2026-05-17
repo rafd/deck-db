@@ -2,6 +2,18 @@
   (:require
    [deck-db.cards :as cards]))
 
+;; Color palette
+(def color-bg-app "#176e03")
+(def color-bg-surface "#0d0d0d")
+(def color-bg-dark "#0d3d03")
+(def color-border "#333")
+(def color-text "#fff")
+(def color-text-secondary "#ccc")
+(def color-text-muted "#999")
+(def color-text-accent "#7ea974")
+(def color-highlight "#c8a84b")
+(def color-input-placeholder "#aaa")
+
 (def card-width-px 42)
 (def card-height-px 60)
 (def card-gap-px 8)
@@ -20,7 +32,6 @@
               :height (str card-height-px "px")
               :object-fit "none"
               :object-position "center"}}]))
-
 
 (defn arrow []
   [:img {:src "down.png" :width "128px" :class "mx-auto"}])

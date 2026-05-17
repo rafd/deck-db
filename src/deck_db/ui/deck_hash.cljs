@@ -1,7 +1,8 @@
 (ns deck-db.ui.deck-hash
   (:require
    [clojure.string :as str]
-   [deck-db.cards :as cards]))
+   [deck-db.cards :as cards]
+   [deck-db.ui.common :as ui]))
 
 (def ^:private rank->card-idx
   {"a" 0 "2" 1 "3" 2 "4" 3 "5" 4 "6" 5 "7" 6 "8" 7 "9" 8 "10" 9 "j" 10 "q" 11 "k" 12})
@@ -52,7 +53,7 @@
 
 (defn in-view [{:keys [*string *deck read-only?]}]
   [:textarea
-   {:class (str "w-full font-mono text-sm bg-[#0d3d03] text-[#7ea974] "
+   {:class (str "w-full font-mono text-sm bg-[" ui/color-bg-dark "] text-[" ui/color-text-accent "] "
                 "rounded-md p-2 resize-none focus:outline-none break-all")
     :rows 2
     :read-only read-only?

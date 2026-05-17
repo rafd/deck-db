@@ -33,8 +33,8 @@
       [:textarea
        {:class (str "w-full bg-white rounded-md "
                     "p-3 text-black font-mono text-base leading-relaxed "
-                    "resize-none focus:outline-none focus:border-[#c8a84b] "
-                    "placeholder-[#aaa]")
+                    "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
+                    "placeholder-[" ui/color-input-placeholder "]")
         :rows 1
         :placeholder "Type a message… "
         :value t
@@ -42,7 +42,7 @@
                      (->> (.. e -target -value)
                           codec/sanitize
                           (reset! text)))}]
-      [:div {:class "flex text-[#7ea974] tracking-wider"}
+      [:div {:class (str "flex text-[" ui/color-text-accent "] tracking-wider")}
        "Character Set: A–Z, a–z, 0–9, punctuation (ASCII)"
        [:div {:class "grow"}]
        [char-counter]]]

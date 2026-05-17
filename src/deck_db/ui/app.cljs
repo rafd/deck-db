@@ -28,7 +28,7 @@
 
 (defn tab-nav []
   [:nav
-   {:class "flex border-b-2 border-[#333] mb-4"}
+   {:class (str "flex border-b-2 border-[" ui/color-border "] mb-4")}
    (doall
     (for [[tab-id tab] tabs]
       ^{:key tab-id}
@@ -37,8 +37,8 @@
                     "py-3 px-5 text-2xl tracking-wider grow "
                     "cursor-pointer transition-colors duration-150 whitespace-nowrap "
                     (if (= @active-tab-id tab-id)
-                      "text-[#fff] [border-bottom-color:#c8a84b]"
-                      "text-[#0d3d03] border-transparent hover:text-[#ccc]"))
+                      (str "text-[" ui/color-text "] [border-bottom-color:" ui/color-highlight "]")
+                      (str "text-[" ui/color-bg-dark "] border-transparent hover:text-[" ui/color-text-secondary "]")))
         :on-click (fn [_]
                     (reset! active-tab-id tab-id))}
        (:tab/label tab)]))])
@@ -55,15 +55,15 @@
      [:img {:src "cards/card_joker_red.png"
             :class "absolute top-4 left-4"}]]
    [:h1
-    {:class "text-5xl tracking-wider text-[#fff]"}
+    {:class (str "text-5xl tracking-wider text-[" ui/color-text "]")}
     "Deck DB"]]
    [:p
-    {:class "text-[#7ea974] tracking-wider"}
+    {:class (str "text-[" ui/color-text-accent "] tracking-wider")}
     "store a message in a deck of cards"]])
 
 (defn app []
   [:div
-   {:class "min-h-screen bg-[#176e03]"}
+   {:class (str "min-h-screen bg-[" ui/color-bg-app "]")}
    [:div
     {:class "mx-auto"
      :style {:max-width ui/width}}

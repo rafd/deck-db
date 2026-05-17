@@ -2,7 +2,8 @@
   (:require
    [clojure.string :as str]
    [deck-db.codec :as codec]
-   [deck-db.tabs.by-hand-common :as bhc]))
+   [deck-db.tabs.by-hand-common :as bhc]
+   [deck-db.ui.common :as ui]))
 
 (def ^:private example-text "Hello, world!")
 (def ^:private ex (codec/encode-steps example-text))
@@ -10,7 +11,7 @@
 (def ^:private ex-pad-len (- codec/max-chars ex-msg-len))
 
 (defn tab []
-  [:div {:class "text-[#ccc] pb-10 font-mono"}
+  [:div {:class (str "text-[" ui/color-text-secondary "] pb-10 font-mono")}
 
    [bhc/section-header "How to Encode a Message by Hand"]
 
@@ -21,7 +22,7 @@
     [:em "factoradic"] " (factorial number system) to map that integer to a unique card ordering."]
 
    [bhc/section-header "Reference: Character → Index"]
-   [:p {:class "text-[#999] text-xs mb-2"}
+   [:p {:class (str "text-[" ui/color-text-muted "] text-xs mb-2")}
     codec/charset-size " characters, indices 0–" (dec codec/charset-size) ". Space is shown as ·"]
    [bhc/charset-table]
 
@@ -34,7 +35,7 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 1] "Write out your message"]
-     [:p {:class "text-sm text-[#999]"}
+     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
       "Use only characters from the table above. Maximum " codec/max-chars " characters. "
       "Pad to exactly " codec/max-chars " characters by appending spaces on the right."]]
 
@@ -46,7 +47,7 @@
       "Call the resulting numbers d₀, d₁, …, d" (bhc/sub (dec codec/max-chars))
       " (each is 0–" (dec codec/charset-size) "). "
       "Padded spaces become 0."]
-     [:p {:class "text-sm text-[#999]"}
+     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
       "Example: 'H' → " (get codec/char->idx \H)
       ",  'i' → " (get codec/char->idx \i)
       ",  ' ' → 0"]]
@@ -60,7 +61,7 @@
                        "  +  d₁ × " codec/charset-size (bhc/sup (- codec/max-chars 2))
                        "  +  …  +  d" (bhc/sub (dec codec/max-chars))
                        " × " codec/charset-size "⁰")]
-     [:p {:class "text-sm text-[#999]"}
+     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
       "N can reach ~8×10⁶⁷."]]
 
     [:div
@@ -71,18 +72,18 @@
      [bhc/formula (str "available = [0, 1, 2, 3, …, " (dec codec/deck-size) "]")]
      [:p {:class "text-sm mb-1"} "For each of the " codec/deck-size " deck positions (first to last):"]
      [:ol {:class "text-sm list-none space-y-1 pl-2 mb-2"}
-      [:li [:span {:class "text-[#c8a84b]"} "a. "]
+      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "a. "]
        "Divide N by (remaining_count − 1)!  →  write down quotient d and remainder r"]
-      [:li [:span {:class "text-[#c8a84b]"} "b. "]
+      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "b. "]
        "The card at position d (0-indexed) in "
-       [:code {:class "text-[#7ea974] font-mono text-xs"} "available"]
+       [:code {:class (str "text-[" ui/color-text-accent "] font-mono text-xs")} "available"]
        " goes next in your deck"]
-      [:li [:span {:class "text-[#c8a84b]"} "c. "]
+      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "c. "]
        "Remove that card from "
-       [:code {:class "text-[#7ea974] font-mono text-xs"} "available"]]
-      [:li [:span {:class "text-[#c8a84b]"} "d. "]
+       [:code {:class (str "text-[" ui/color-text-accent "] font-mono text-xs")} "available"]]
+      [:li [:span {:class (str "text-[" ui/color-highlight "]")} "d. "]
        "Set N = r and repeat for the next position"]]
-     [:p {:class "text-sm text-[#999]"}
+     [:p {:class (str "text-sm text-[" ui/color-text-muted "]")}
       "First iteration uses " (dec codec/deck-size) "!, second uses " (- codec/deck-size 2) "!, …, last uses 0! = 1."]]
 
     [:div
@@ -103,20 +104,20 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 2] "Character → index:"]
-     [:div {:class "bg-[#0d0d0d] rounded-lg px-4 py-3 overflow-x-auto mb-4"}
+     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
          (map-indexed
           (fn [i c]
             ^{:key i}
-            [:td {:class "text-[#ccc] text-center px-2 py-1"} (bhc/display-char c)])
+            [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1")} (bhc/display-char c)])
           (:padded ex))]
         [:tr
          (map-indexed
           (fn [i idx]
             ^{:key i}
-            [:td {:class "text-[#7ea974] text-center px-2 py-1 tabular-nums"} idx])
+            [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1 tabular-nums")} idx])
           (:char-indices ex))]]]]]
 
     [:div
@@ -127,26 +128,26 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 4] "Factoradic → card ordering:"]
-     [:div {:class "bg-[#0d0d0d] rounded-lg px-4 py-3 overflow-x-auto mb-4"}
+     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
          (map-indexed
           (fn [i _]
             ^{:key i}
-            [:td {:class "text-[#999] text-center px-2 py-1"} (str "L" (bhc/sub i))])
+            [:td {:class (str "text-[" ui/color-text-muted "] text-center px-2 py-1")} (str "L" (bhc/sub i))])
           (range codec/deck-size))]
         [:tr
          (map-indexed
           (fn [i d]
             ^{:key i}
-            [:td {:class "text-[#ccc] text-center px-2 py-1 tabular-nums"} d])
+            [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1 tabular-nums")} d])
           (:lehmer-digits ex))]
         [:tr
          (map-indexed
           (fn [i card-idx]
             ^{:key i}
-            [:td {:class "text-[#7ea974] text-center px-2 py-1"} (bhc/idx->card-name card-idx)])
+            [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1")} (bhc/idx->card-name card-idx)])
           (:perm ex))]]]]]
 
     [:div

@@ -43,7 +43,7 @@
   (let [p       @perm
         message (codec/decode p)]
     [:div {:class "space-y-4"}
-     [:div {:class "flex text-[#7ea974] tracking-wider"}]
+     [:div {:class (str "flex text-[" ui/color-text-accent "] tracking-wider")}]
 
      [:div
       [h/in-view {:*string deck-str-input
@@ -60,5 +60,5 @@
                 message)
        :class (str "w-full bg-white rounded-md "
                    "p-3 text-black font-mono text-base leading-relaxed "
-                   "resize-none focus:outline-none focus:border-[#c8a84b] "
-                   "placeholder-[#aaa]")}]]))
+                   "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
+                   "placeholder-[" ui/color-input-placeholder "]")}]]))
