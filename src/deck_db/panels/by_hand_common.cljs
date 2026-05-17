@@ -7,8 +7,15 @@
 (def suit-symbols {"clubs" "♣" "diamonds" "♦" "hearts" "♥" "spades" "♠"})
 (def values ["A" "2" "3" "4" "5" "6" "7" "8" "9" "10" "J" "Q" "K"])
 
-(defn- display-char [c]
+(defn display-char [c]
   (if (= c \space) "·" (str c)))
+
+(defn idx->card-name [idx]
+  (let [suit-idx (quot idx 13)
+        val-idx  (rem idx 13)
+        suit     (nth suits suit-idx)
+        value    (nth values val-idx)]
+    (str value (get suit-symbols suit))))
 
 (def ^:private sup-chars [\⁰ \¹ \² \³ \⁴ \⁵ \⁶ \⁷ \⁸ \⁹])
 (def ^:private sub-chars [\₀ \₁ \₂ \₃ \₄ \₅ \₆ \₇ \₈ \₉])

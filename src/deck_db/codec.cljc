@@ -121,6 +121,10 @@
          (apply str)
          str/trimr)))
 
+(defn- bi->str [n]
+  #?(:clj  (str n)
+     :cljs (js/String n)))
+
 ;; Public API
 
 (defn encode
@@ -143,5 +147,69 @@
        (take max-chars)
        (apply str)))
 
+(defn encode-steps
+  "Return intermediate values for encoding text.
+   Keys: :padded :char-indices :N :lehmer-digits :perm"
+  [text]
+  (let [padded    (subs (str text (apply str (repeat max-chars " "))) 0 max-chars)
+        char-idxs (mapv (fn [ch] (get char->idx ch 0)) padded)
+        N         (text->bigint text)]
+    (loop [n      N
+           avail  (vec (range deck-size))
+           lehmer []
+           perm   []]
+      (if (empty? avail)
+        {:padded padded
+         :char-indices char-idxs
+         :N (bi->str N)
+         :lehmer-digits lehmer
+         :perm perm}
+        (let [k      (count avail)
+              fact   (nth factorials (dec k))
+              d      (bi->int (bi-div n fact))
+              rest-n (bi-mod n fact)]
+          (recur rest-n
+                 (into [] (concat (subvec avail 0 d) (subvec avail (inc d))))
+                 (conj lehmer d)
+                 (conj perm (nth avail d))))))))
+
+(defn decode-steps
+  "Return intermediate values for decoding a permutation.
+   Keys: :lehmer-digits :N :char-indices :text"
+  [perm]
+  (let [{:keys [N lehmer]}
+        (loop [n         (bi 0)
+               avail     (vec (range deck-size))
+               remaining (seq perm)
+               lehmer    []]
+          (if (nil? remaining)
+            {:N n :lehmer lehmer}
+            (let [card      (first remaining)
+                  k         (count avail)
+                  fact      (nth factorials (dec k))
+                  d         (find-idx avail card)
+                  new-avail (into [] (concat (subvec avail 0 d) (subvec avail (inc d))))]
+              (recur (bi+ n (bi* (bi d) fact))
+                     new-avail
+                     (next remaining)
+                     (conj lehmer d)))))
+        base      (bi (count charset))
+        digits    (loop [n   N
+                         acc []]
+                    (if (= (count acc) max-chars)
+                      acc
+                      (recur (bi-div n base)
+                             (conj acc (bi->int (bi-mod n base))))))
+        char-idxs (vec (reverse digits))
+        text      (->> (map #(nth idx->char %) char-idxs)
+                       (apply str)
+                       str/trimr)]
+    {:lehmer-digits lehmer
+     :N (bi->str N)
+     :char-indices char-idxs
+     :text text}))
+
 #_(encode "Hello World")
 #_(decode (encode "Hello World"))
+#_(encode-steps "Hello, world!")
+#_(decode-steps (encode "Hello, world!"))
