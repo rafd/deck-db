@@ -43,7 +43,7 @@
                           codec/sanitize
                           (reset! text)))}]
       [:div {:class "flex text-[#7ea974] tracking-wider"}
-       "Character Set: A–Z, a–z, 0–9, space, apostrophe"
+       "Character Set: A–Z, a–z, 0–9, punctuation (ASCII)"
        [:div {:class "grow"}]
        [char-counter]]]
      [ui/arrow]

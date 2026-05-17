@@ -10,6 +10,15 @@
 (defn- display-char [c]
   (if (= c \space) "·" (str c)))
 
+(def ^:private sup-chars [\⁰ \¹ \² \³ \⁴ \⁵ \⁶ \⁷ \⁸ \⁹])
+(def ^:private sub-chars [\₀ \₁ \₂ \₃ \₄ \₅ \₆ \₇ \₈ \₉])
+
+(defn- num->unicode [char-vec n]
+  (apply str (map #(nth char-vec (- (int %) (int \0))) (str n))))
+
+(defn sup [n] (num->unicode sup-chars n))
+(defn sub [n] (num->unicode sub-chars n))
+
 (defn charset-table []
   (let [cols 8
         rows (partition cols (map-indexed vector codec/charset))]

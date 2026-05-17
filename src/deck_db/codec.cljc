@@ -2,9 +2,13 @@
   (:require
    [clojure.string :as str]))
 
-;; space, apostrophe, 0-9, A-Z, a-z  →  64 characters (6 bits each)
-(def charset " '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+;; ASCII 32–126: all non-control characters (space through ~)  →  95 characters
+(def charset
+  #_(apply str (map char (range 32 127)))
+  " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+
 (def valid-chars (set charset))
+(def charset-size (count charset))
 (def deck-size 52)
 
 (def char->idx
@@ -120,7 +124,7 @@
 ;; Public API
 
 (defn encode
-  "Encode text (up to max-chars chars from [A-Za-z0-9 ']) into a permutation of
+  "Encode text (up to max-chars chars from ASCII 32–126) into a permutation of
   card indices 0–(deck-size-1). Returns a vector of deck-size integers."
   [text]
   (-> text text->bigint bigint->perm))
