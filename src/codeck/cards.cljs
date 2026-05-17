@@ -1,4 +1,4 @@
-(ns deck-db.cards)
+(ns codeck.cards)
 
 ;; Canonical 52-card deck ordering: clubs A-K, diamonds A-K, hearts A-K, spades A-K
 ;; Image filenames use: A, 02–09, 10, J, Q, K

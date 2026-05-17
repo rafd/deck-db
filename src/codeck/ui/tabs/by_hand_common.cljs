@@ -1,8 +1,8 @@
-(ns deck-db.ui.tabs.by-hand-common
+(ns codeck.ui.tabs.by-hand-common
   (:require
    [clojure.string :as str]
-   [deck-db.codec :as codec]
-   [deck-db.ui.common :as ui]))
+   [codeck.codec :as codec]
+   [codeck.ui.common :as ui]))
 
 (def suits ["clubs" "diamonds" "hearts" "spades"])
 (def suit-symbols {"clubs" "♣" "diamonds" "♦" "hearts" "♥" "spades" "♠"})

@@ -1,9 +1,9 @@
-(ns deck-db.ui.tabs.encode
+(ns codeck.ui.tabs.encode
   (:require
    [reagent.core :as r]
-   [deck-db.codec :as codec]
-   [deck-db.ui.deck-hash :as h]
-   [deck-db.ui.common :as ui]))
+   [codeck.codec :as codec]
+   [codeck.ui.deck-hash :as h]
+   [codeck.ui.common :as ui]))
 
 (def ^:private text (r/atom ""))
 

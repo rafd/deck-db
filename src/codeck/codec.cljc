@@ -1,4 +1,4 @@
-(ns deck-db.codec
+(ns codeck.codec
   (:require
    [clojure.string :as str]))
 

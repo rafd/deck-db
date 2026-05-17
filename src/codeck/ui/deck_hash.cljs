@@ -1,8 +1,8 @@
-(ns deck-db.ui.deck-hash
+(ns codeck.ui.deck-hash
   (:require
    [clojure.string :as str]
-   [deck-db.cards :as cards]
-   [deck-db.ui.common :as ui]))
+   [codeck.cards :as cards]
+   [codeck.ui.common :as ui]))
 
 (def ^:private rank->card-idx
   {"a" 0 "2" 1 "3" 2 "4" 3 "5" 4 "6" 5 "7" 6 "8" 7 "9" 8 "10" 9 "j" 10 "q" 11 "k" 12})

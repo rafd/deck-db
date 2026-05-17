@@ -1,10 +1,10 @@
-(ns deck-db.ui.tabs.encode-by-hand
+(ns codeck.ui.tabs.encode-by-hand
   (:require
    [clojure.string :as str]
    [reagent.core :as r]
-   [deck-db.codec :as codec]
-   [deck-db.ui.tabs.by-hand-common :as bhc]
-   [deck-db.ui.common :as ui]))
+   [codeck.codec :as codec]
+   [codeck.ui.tabs.by-hand-common :as bhc]
+   [codeck.ui.common :as ui]))
 
 (def *example-text (r/atom "Hello, world!"))
 (def *ex (r/reaction (codec/encode-steps @*example-text)))

@@ -1,9 +1,9 @@
-(ns deck-db.ui.tabs.decode
+(ns codeck.ui.tabs.decode
   (:require
    [reagent.core :as r]
-   [deck-db.codec :as codec]
-   [deck-db.ui.deck-hash :as h]
-   [deck-db.ui.common :as ui]))
+   [codeck.codec :as codec]
+   [codeck.ui.deck-hash :as h]
+   [codeck.ui.common :as ui]))
 
 (defonce perm (r/atom (vec (range codec/deck-size))))
 (defonce dragging-pos (r/atom nil))

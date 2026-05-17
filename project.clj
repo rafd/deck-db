@@ -1,4 +1,4 @@
-(defproject deck-db "0.1.0-SNAPSHOT"
+(defproject codeck "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.12.5"]
                  [org.clojure/clojurescript "1.12.134"]
                  [reagent "2.0.1"]
@@ -14,15 +14,15 @@
   {:builds
    [{:id           "dev"
      :source-paths ["src"]
-     :figwheel     {:on-jsload "deck-db.core/on-js-reload"}
-     :compiler     {:main                 deck-db.core
+     :figwheel     {:on-jsload "codeck.core/on-js-reload"}
+     :compiler     {:main                 codeck.core
                     :asset-path           "js/out"
                     :output-to            "resources/public/js/main.js"
                     :output-dir           "resources/public/js/out"
                     :source-map-timestamp true}}
     {:id           "prod"
      :source-paths ["src"]
-     :compiler     {:main          deck-db.core
+     :compiler     {:main          codeck.core
                     :output-to     "resources/public/js/main.js"
                     :optimizations :advanced
                     :pretty-print  false}}]}

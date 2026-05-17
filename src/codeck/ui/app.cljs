@@ -1,11 +1,11 @@
-(ns deck-db.ui.app
+(ns codeck.ui.app
   (:require
    [reagent.core :as r]
-   [deck-db.ui.common :as ui]
-   [deck-db.ui.tabs.decode :as tab-decode]
-   [deck-db.ui.tabs.decode-by-hand :as tab-decode-by-hand]
-   [deck-db.ui.tabs.encode :as tab-encode]
-   [deck-db.ui.tabs.encode-by-hand :as tab-encode-by-hand]))
+   [codeck.ui.common :as ui]
+   [codeck.ui.tabs.decode :as tab-decode]
+   [codeck.ui.tabs.decode-by-hand :as tab-decode-by-hand]
+   [codeck.ui.tabs.encode :as tab-encode]
+   [codeck.ui.tabs.encode-by-hand :as tab-encode-by-hand]))
 
 (defonce active-tab-id (r/atom :tab/encode))
 
@@ -56,7 +56,7 @@
             :class "absolute top-4 left-4"}]]
    [:h1
     {:class (str "text-5xl tracking-wider text-[" ui/color-text "]")}
-    "Deck DB"]]
+    "coDeck"]]
    [:p
     {:class (str "text-[" ui/color-text-accent "] tracking-wider")}
     "store a message in a deck of cards"]])

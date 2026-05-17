@@ -1,7 +1,7 @@
-(ns deck-db.core
+(ns codeck.core
   (:require
    [reagent.dom :as rdom]
-   [deck-db.ui.app :as app]
+   [codeck.ui.app :as app]
    ))
 
 (defn mount []

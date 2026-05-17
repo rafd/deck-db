@@ -1,6 +1,6 @@
-(ns deck-db.ui.common
+(ns codeck.ui.common
   (:require
-   [deck-db.cards :as cards]))
+   [codeck.cards :as cards]))
 
 ;; Color palette
 (def color-bg-app "#176e03")
