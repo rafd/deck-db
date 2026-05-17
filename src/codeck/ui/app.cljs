@@ -66,7 +66,7 @@
    {:class (str "min-h-screen bg-[" ui/color-bg-app "]")}
    [:div
     {:class "mx-auto"
-     :style {:max-width ui/width}}
+     :style {:max-width (+ 32 ui/width)}}
     [header]
     [tab-nav]
     [:div {:class "p-4"}
