@@ -2,6 +2,7 @@
   (:require
    [reagent.core :as r]
    [reagent.dom :as rdom]
+   [deck-db.cards :as cards]
    [deck-db.ui.common :as ui]
    [deck-db.panels.decode :as panel-decode]
    [deck-db.panels.decode-by-hand :as panel-decode-by-hand]
@@ -47,9 +48,17 @@
 (defn header []
   [:header
    {:class "text-center p-10"}
+   [:div
+    [:div {:class "relative"}
+     [:img {:src "/cards/card_back.png"
+            :class "absolute top-0 left-0"}]
+     [:img {:src "/cards/card_back.png"
+            :class "absolute top-2 left-2"}]
+     [:img {:src "/cards/card_joker_red.png"
+            :class "absolute top-4 left-4"}]]
    [:h1
     {:class "text-5xl tracking-wider text-[#fff]"}
-    "Deck DB"]
+    "Deck DB"]]
    [:p
     {:class "text-[#7ea974] tracking-wider"}
     "store a message in a deck of cards"]])
