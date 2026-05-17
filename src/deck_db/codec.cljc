@@ -45,16 +45,12 @@
    (range 1 (inc deck-size))))
 
 ;; Largest n such that (count charset)^n ≤ deck-size!
-;; (each charset character encodes log2(count charset) bits; deck-size! permutations bound the capacity)
+;; = floor( log(deck-size!) / log(charset-size) )
+;; log(deck-size!) is computed as a sum to avoid materialising the BigInt.
 (def max-chars
-  (let [deck-perms (nth factorials deck-size)
-        base       (bi (count charset))]
-    (loop [n     0
-           power (bi 1)]
-      (let [next-power (bi* power base)]
-        (if (bi> next-power deck-perms)
-          n
-          (recur (inc n) next-power))))))
+  (let [log-deck-perms (reduce + (map (fn [x] (Math/log x)) (range 1 (inc deck-size))))
+        log-base       (Math/log charset-size)]
+    (int (Math/floor (/ log-deck-perms log-base)))))
 
 (defn- find-idx
   "Linear search: index of x in vector v, or -1."
