@@ -1,4 +1,4 @@
-(ns deck-db.panels.by-hand-common
+(ns deck-db.tabs.by-hand-common
   (:require
    [clojure.string :as str]
    [deck-db.codec :as codec]))

@@ -1,4 +1,4 @@
-(ns deck-db.panels.encode
+(ns deck-db.tabs.encode
   (:require
    [reagent.core :as r]
    [deck-db.codec :as codec]
@@ -25,7 +25,7 @@
      ^{:key pos}
      [ui/card-img card-idx])])
 
-(defn panel []
+(defn tab []
   (let [t    @text
         perm (codec/encode t)]
     [:div {:class "space-y-2"}

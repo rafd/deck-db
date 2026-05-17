@@ -4,26 +4,26 @@
    [reagent.dom :as rdom]
    [deck-db.cards :as cards]
    [deck-db.ui.common :as ui]
-   [deck-db.panels.decode :as panel-decode]
-   [deck-db.panels.decode-by-hand :as panel-decode-by-hand]
-   [deck-db.panels.encode :as panel-encode]
-   [deck-db.panels.encode-by-hand :as panel-encode-by-hand]))
+   [deck-db.tabs.decode :as tab-decode]
+   [deck-db.tabs.decode-by-hand :as tab-decode-by-hand]
+   [deck-db.tabs.encode :as tab-encode]
+   [deck-db.tabs.encode-by-hand :as tab-encode-by-hand]))
 
 (defonce active-tab-id (r/atom :tab/encode))
 
 (def tabs
   (->> [{:tab/id :tab/encode
         :tab/label "Encode"
-        :tab/view-fn panel-encode/panel}
+        :tab/view-fn tab-encode/tab}
         {:tab/id :tab/encode-by-hand
          :tab/label "Encode by Hand"
-         :tab/view-fn panel-encode-by-hand/panel}
+         :tab/view-fn tab-encode-by-hand/tab}
         {:tab/id :tab/decode
          :tab/label "Decode"
-         :tab/view-fn panel-decode/panel}
+         :tab/view-fn tab-decode/tab}
         {:tab/id :tab/decode-by-hand
          :tab/label "Decode by Hand"
-         :tab/view-fn panel-decode-by-hand/panel}]
+         :tab/view-fn tab-decode-by-hand/tab}]
        (map (fn [t]
               [(:tab/id t) t]))
        (into {})))

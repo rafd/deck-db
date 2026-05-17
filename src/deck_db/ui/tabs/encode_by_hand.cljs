@@ -1,15 +1,15 @@
-(ns deck-db.panels.encode-by-hand
+(ns deck-db.tabs.encode-by-hand
   (:require
    [clojure.string :as str]
    [deck-db.codec :as codec]
-   [deck-db.panels.by-hand-common :as bhc]))
+   [deck-db.tabs.by-hand-common :as bhc]))
 
 (def ^:private example-text "Hello, world!")
 (def ^:private ex (codec/encode-steps example-text))
 (def ^:private ex-msg-len (count example-text))
 (def ^:private ex-pad-len (- codec/max-chars ex-msg-len))
 
-(defn panel []
+(defn tab []
   [:div {:class "text-[#ccc] pb-10 font-mono"}
 
    [bhc/section-header "How to Encode a Message by Hand"]

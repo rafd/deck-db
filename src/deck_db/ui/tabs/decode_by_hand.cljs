@@ -1,12 +1,12 @@
-(ns deck-db.panels.decode-by-hand
+(ns deck-db.tabs.decode-by-hand
   (:require
    [deck-db.codec :as codec]
-   [deck-db.panels.by-hand-common :as bhc]))
+   [deck-db.tabs.by-hand-common :as bhc]))
 
 (def ^:private ex-perm (codec/encode "Hello, world!"))
 (def ^:private ex (codec/decode-steps ex-perm))
 
-(defn panel []
+(defn tab []
   [:div {:class "text-[#ccc] pb-10 font-mono"}
 
    [bhc/section-header "How to Decode a Deck by Hand"]

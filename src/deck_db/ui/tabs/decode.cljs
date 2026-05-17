@@ -1,4 +1,4 @@
-(ns deck-db.panels.decode
+(ns deck-db.tabs.decode
   (:require
    [reagent.core :as r]
    [deck-db.codec :as codec]
@@ -39,7 +39,7 @@
      ^{:key card-idx}
      [draggable-card pos card-idx])])
 
-(defn panel []
+(defn tab []
   (let [p       @perm
         message (codec/decode p)]
     [:div {:class "space-y-4"}
