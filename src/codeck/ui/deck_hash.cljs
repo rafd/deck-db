@@ -55,7 +55,7 @@
   [:textarea
    {:class (str "w-full font-mono text-sm bg-[" ui/color-bg-dark "] text-[" ui/color-text-accent "] "
                 "rounded-md p-2 resize-none focus:outline-none break-all")
-    :rows 2
+    :rows 3
     :read-only read-only?
     :value @*string
     :on-change (fn [e]

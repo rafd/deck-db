@@ -35,7 +35,7 @@
                     "p-3 text-black font-mono text-base leading-relaxed "
                     "resize-none focus:outline-none focus:border-[" ui/color-highlight "] "
                     "placeholder-[" ui/color-input-placeholder "]")
-        :rows 1
+        :rows 2
         :placeholder "Type a message… "
         :value t
         :on-change (fn [e]
@@ -48,4 +48,5 @@
        [char-counter]]]
      [ui/arrow]
      [h/out-view perm]
-     [card-grid perm]]))
+     [:div {:class "overflow-x-auto"}
+      [card-grid perm]]]))

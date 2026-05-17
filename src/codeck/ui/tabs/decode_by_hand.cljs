@@ -56,7 +56,8 @@
      [:div {:class "space-y-4 mb-8"}
       [h/in-view {:*string *deck-str-input
                   :*deck *perm}]
-      [card-grid p]]
+      [:div {:class "overflow-x-auto"}
+       [card-grid p]]]
 
 
      ;; STEP 1 ---

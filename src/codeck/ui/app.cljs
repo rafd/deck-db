@@ -28,7 +28,7 @@
 
 (defn tab-nav []
   [:nav
-   {:class (str "flex border-b-2 border-[" ui/color-border "] mb-4")}
+   {:class (str "flex flex-wrap border-b-2 border-[" ui/color-border "] mb-4")}
    (doall
     (for [[tab-id tab] tabs]
       ^{:key tab-id}
@@ -45,21 +45,21 @@
 
 (defn header []
   [:header
-   {:class "text-center p-10"}
+   {:class "p-10 flex"}
+   [:div {:class "relative w-22 h-10"}
+    [:img {:src "cards/card_back.png"
+           :class "absolute top-0 left-0"}]
+    [:img {:src "cards/card_back.png"
+           :class "absolute top-2 left-2"}]
+    [:img {:src "cards/card_joker_red.png"
+           :class "absolute top-4 left-4"}]]
    [:div
-    [:div {:class "relative"}
-     [:img {:src "cards/card_back.png"
-            :class "absolute top-0 left-0"}]
-     [:img {:src "cards/card_back.png"
-            :class "absolute top-2 left-2"}]
-     [:img {:src "cards/card_joker_red.png"
-            :class "absolute top-4 left-4"}]]
-   [:h1
-    {:class (str "text-5xl tracking-wider text-[" ui/color-text "]")}
-    "coDeck"]]
-   [:p
-    {:class (str "text-[" ui/color-text-accent "] tracking-wider")}
-    "store a message in a deck of cards"]])
+    [:h1
+     {:class (str "text-5xl tracking-wider text-[" ui/color-text "]")}
+     "coDeck"]
+    [:p
+     {:class (str "text-[" ui/color-text-accent "] tracking-wider")}
+     "store data in a deck of cards"]]])
 
 (defn app []
   [:div
@@ -69,6 +69,7 @@
      :style {:max-width ui/width}}
     [header]
     [tab-nav]
-    [(:tab/view-fn (tabs @active-tab-id))]]])
+    [:div {:class "p-4"}
+     [(:tab/view-fn (tabs @active-tab-id))]]]])
 
 

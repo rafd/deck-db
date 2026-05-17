@@ -48,13 +48,14 @@
      [:div
       [h/in-view {:*string deck-str-input
                   :*deck perm}]
-      [card-grid p]]
+      [:div {:class "overflow-x-auto"}
+       [card-grid p]]]
 
      [ui/arrow]
 
      [:textarea
       {:read-only true
-       :rows 1
+       :rows 2
        :value (if (empty? message)
                 "Rearrange the cards to decode your message."
                 message)
