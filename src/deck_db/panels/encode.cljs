@@ -1,9 +1,8 @@
 (ns deck-db.panels.encode
   (:require
    [reagent.core :as r]
-   [deck-db.ui.common :as ui]
-   [deck-db.cards :as cards]
-   [deck-db.codec :as codec]))
+   [deck-db.codec :as codec]
+   [deck-db.ui.common :as ui]))
 
 (def ^:private text (r/atom ""))
 
@@ -16,19 +15,6 @@
                   (when over? "text-red-400"))}
      [:span  n " / " limit]]))
 
-(defn- card-img [idx card-idx]
-  (let [card (nth cards/all-cards card-idx)
-        path (cards/image-path card)]
-    [:img
-     {:key idx
-      :src path
-      :title (str (:value card) " of " (:suit card))
-      :class "select-none"
-      :style {:width (str ui/card-width-px "px")
-              :height (str ui/card-height-px "px")
-              :object-fit "none"
-              :object-position "center"}}]))
-
 (defn- card-grid [perm]
   [:div
    {:class "flex flex-wrap"
@@ -36,7 +22,7 @@
             :width (str ui/width "px")}}
    (for [[pos card-idx] (map-indexed vector perm)]
      ^{:key pos}
-     [card-img pos card-idx])])
+     [ui/card-img card-idx])])
 
 (defn panel []
   (let [t    @text
