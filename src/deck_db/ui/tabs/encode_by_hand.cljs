@@ -16,10 +16,14 @@
    [bhc/section-header "How to Encode a Message by Hand"]
 
    [:p {:class "text-sm mb-3"}
-    "A " codec/deck-size "-card deck has " codec/deck-size "! ≈ 8×10⁶⁷ possible orderings. With a character set of " codec/charset-size ", that's enough to store a message of up to "
+    "A " codec/deck-size "-card deck has " codec/deck-size "! ≈ 8×10⁶⁷ possible orderings. With a character set of " codec/charset-size " characters, that's enough to store a message of up to "
     [:strong {:class "text-white"} codec/max-chars " characters"]
-    ". The encoding converts your message into a big integer in base " codec/charset-size ", then uses the "
-    [:em "factoradic"] " (factorial number system) to map that integer to a unique card ordering."]
+    " (" "log(" codec/deck-size "!)" "/" "log(" codec/charset-size ") ≈ " codec/max-chars ")"
+
+    ". The encoding converts a message into an integer in base " codec/charset-size ", then uses the "
+    [:a {:class "underline"
+         :href "https://en.wikipedia.org/wiki/Factorial_number_system"} "factorial number system"]
+     " to map that integer to a unique card ordering."]
 
    [bhc/section-header "Reference: Character → Index"]
    [:p {:class (str "text-[" ui/color-text-muted "] text-xs mb-2")}
