@@ -108,7 +108,7 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 2] "Character → index:"]
-     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
+     [ui/blackboard
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
@@ -122,7 +122,7 @@
           (fn [i idx]
             ^{:key i}
             [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1 tabular-nums")} idx])
-          (:char-indices ex))]]]]]
+          (:char-indices ex))]]]]
 
     [:div
      [:p {:class "text-sm mb-1"}
@@ -132,7 +132,7 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 4] "Factoradic → card ordering:"]
-     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
+     [ui/blackboard
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
@@ -152,9 +152,9 @@
           (fn [i card-idx]
             ^{:key i}
             [:td {:class (str "text-[" ui/color-text-accent "] text-center px-2 py-1")} (bhc/idx->card-name card-idx)])
-          (:perm ex))]]]]]
+          (:perm ex))]]]]
 
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 5] "Full deck ordering:"]
-     [bhc/code-block (str/join "  " (map bhc/idx->card-name (:perm ex)))]]]])
+     [bhc/code-block (str/join "  " (map bhc/idx->card-name (:perm ex)))]]]]]])

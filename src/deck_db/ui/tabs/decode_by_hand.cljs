@@ -102,7 +102,7 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 1] "Card indices in your deck:"]
-     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
+     [ui/blackboard
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
@@ -122,12 +122,12 @@
           (fn [i card-idx]
             ^{:key i}
             [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1 tabular-nums")} card-idx])
-          ex-perm)]]]]]
+          ex-perm)]]]]
 
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 2] "Lehmer code:"]
-     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
+     [ui/blackboard
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
@@ -141,7 +141,7 @@
           (fn [i d]
             ^{:key i}
             [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1 tabular-nums")} d])
-          (:lehmer-digits ex))]]]]]
+          (:lehmer-digits ex))]]]]
 
     [:div
      [:p {:class "text-sm mb-1"}
@@ -151,7 +151,7 @@
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 4] "Base-" codec/charset-size " digits d₀–d" (bhc/sub (dec codec/max-chars)) ":"]
-     [:div {:class (str "bg-[" ui/color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}
+     [ui/blackboard
       [:table {:class "text-xs font-mono border-collapse"}
        [:tbody
         [:tr
@@ -165,9 +165,9 @@
           (fn [i d]
             ^{:key i}
             [:td {:class (str "text-[" ui/color-text-secondary "] text-center px-2 py-1 tabular-nums")} d])
-          (:char-indices ex))]]]]]
+          (:char-indices ex))]]]]
 
     [:div
      [:p {:class "text-sm mb-1"}
       [bhc/step-num 5] "Decoded message:"]
-     [bhc/code-block (str "\"" (:text ex) "\"")]]]])
+     [bhc/code-block (str "\"" (:text ex) "\"")]]]]]]])

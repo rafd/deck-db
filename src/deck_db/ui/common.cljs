@@ -8,7 +8,7 @@
 (def color-bg-dark "#0d3d03")
 (def color-border "#333")
 (def color-text "#fff")
-(def color-text-secondary "#ccc")
+(def color-text-secondary "#ddd")
 (def color-text-muted "#999")
 (def color-text-accent "#7ea974")
 (def color-highlight "#c8a84b")
@@ -32,6 +32,10 @@
               :height (str card-height-px "px")
               :object-fit "none"
               :object-position "center"}}]))
+
+(defn blackboard [& children]
+  (into [:div {:class (str "bg-[" color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}]
+        children))
 
 (defn arrow []
   [:img {:src "down.png" :width "128px" :class "mx-auto"}])
