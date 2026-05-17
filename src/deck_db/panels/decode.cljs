@@ -2,10 +2,12 @@
   (:require
    [reagent.core :as r]
    [deck-db.codec :as codec]
+   [deck-db.ui.deck-hash :as h]
    [deck-db.ui.common :as ui]))
 
-(def ^:private perm (r/atom (vec (range codec/deck-size))))
-(def ^:private dragging-pos (r/atom nil))
+(defonce perm (r/atom (vec (range codec/deck-size))))
+(defonce dragging-pos (r/atom nil))
+(defonce deck-str-input (r/atom (h/perm->str (vec (range codec/deck-size)))))
 
 (defn- reorder [v from to]
   (if (= from to)
@@ -19,19 +21,20 @@
   [:div
    {:draggable true
     :class "cursor-grab"
+    :style {:padding (str (/ ui/card-gap-px 2) "px")}
     :on-drag-start (fn [_] (reset! dragging-pos pos))
     :on-drag-over (fn [e] (.preventDefault e))
     :on-drop (fn [_]
                (when-let [from @dragging-pos]
-                 (swap! perm reorder from pos))
+                 (swap! perm reorder from pos)
+                 (reset! deck-str-input (h/perm->str @perm)))
                (reset! dragging-pos nil))}
    [ui/card-img card-idx]])
 
 (defn- card-grid [perm-val]
   [:div
    {:class "flex flex-wrap"
-    :style {:gap (str ui/card-gap-px "px")
-            :width (str ui/width "px")}}
+    :style {:width (str (* 13 (+ ui/card-width-px ui/card-gap-px)) "px")}}
    (for [[pos card-idx] (map-indexed vector perm-val)]
      ^{:key card-idx}
      [draggable-card pos card-idx])])
@@ -40,12 +43,22 @@
   (let [p       @perm
         message (codec/decode p)]
     [:div {:class "space-y-4"}
-     [card-grid p]
-     [:div {:class "text-[#fff] font-mono text-lg p-3 bg-[#0d3d03] rounded-md min-h-[2.5rem]"}
-      (if (empty? message)
-        [:span {:class "text-[#999] italic"} "Rearrange the cards to decode a message"]
-        message)]
-     [:button
-      {:class "text-[#7ea974] text-sm cursor-pointer bg-transparent border-0 p-0"
-       :on-click (fn [_] (reset! perm (vec (range codec/deck-size))))}
-      "Reset"]]))
+     [:div {:class "flex text-[#7ea974] tracking-wider"}]
+
+     [:div
+      [h/in-view {:*string deck-str-input
+                  :*deck perm}]
+      [card-grid p]]
+
+     [ui/arrow]
+
+     [:textarea
+      {:read-only true
+       :rows 1
+       :value (if (empty? message)
+                "Rearrange the cards to decode your message."
+                message)
+       :class (str "w-full bg-white rounded-md "
+                   "p-3 text-black font-mono text-base leading-relaxed "
+                   "resize-none focus:outline-none focus:border-[#c8a84b] "
+                   "placeholder-[#aaa]")}]]))

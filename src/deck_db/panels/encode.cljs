@@ -2,6 +2,7 @@
   (:require
    [reagent.core :as r]
    [deck-db.codec :as codec]
+   [deck-db.ui.deck-hash :as h]
    [deck-db.ui.common :as ui]))
 
 (def ^:private text (r/atom ""))
@@ -45,4 +46,6 @@
        "Character Set: A–Z, a–z, 0–9, space, apostrophe"
        [:div {:class "grow"}]
        [char-counter]]]
+     [ui/arrow]
+     [h/out-view perm]
      [card-grid perm]]))

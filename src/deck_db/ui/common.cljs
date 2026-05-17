@@ -20,3 +20,7 @@
               :height (str card-height-px "px")
               :object-fit "none"
               :object-position "center"}}]))
+
+
+(defn arrow []
+  [:img {:src "down.png" :width "128px" :class "mx-auto"}])
