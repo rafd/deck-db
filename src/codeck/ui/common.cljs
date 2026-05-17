@@ -1,5 +1,6 @@
 (ns codeck.ui.common
   (:require
+   [reagent.core :as r]
    [codeck.cards :as cards]))
 
 ;; Color palette
@@ -32,6 +33,52 @@
               :height (str card-height-px "px")
               :object-fit "none"
               :object-position "center"}}]))
+
+(defn- reorder [v from to]
+  (if (= from to)
+    v
+    (let [item    (nth v from)
+          without (vec (concat (subvec v 0 from) (subvec v (inc from))))
+          to'     (if (> to from) (dec to) to)]
+      (vec (concat (subvec without 0 to') [item] (subvec without to'))))))
+
+(defn- find-pos-at [x y]
+  (when-let [el (.elementFromPoint js/document x y)]
+    (when-let [target (.closest el "[data-pos]")]
+      (js/parseInt (.getAttribute target "data-pos")))))
+
+(defn rearrangeable-deck
+  "A drag-and-drop (mouse + touch) card grid.
+   *perm     — atom holding the current permutation vector
+   on-drop!  — zero-arg callback called after each successful reorder"
+  [*perm on-drop!]
+  (let [*dragging-pos (r/atom nil)
+        do-drop! (fn [from to]
+                   (when (and from to (not= from to))
+                     (swap! *perm reorder from to)
+                     (on-drop!)))]
+    (fn [*perm _]
+      [:div {:class "flex flex-wrap"}
+       (for [[pos card-idx] (map-indexed vector @*perm)]
+         ^{:key card-idx}
+         [:div
+          {:draggable true
+           :data-pos pos
+           :class "cursor-grab"
+           :style {:padding (str (/ card-gap-px 2) "px")
+                   :touch-action "none"}
+           :on-drag-start (fn [_] (reset! *dragging-pos pos))
+           :on-drag-over (fn [e] (.preventDefault e))
+           :on-drop (fn [_]
+                      (do-drop! @*dragging-pos pos)
+                      (reset! *dragging-pos nil))
+           :on-touch-start (fn [_] (reset! *dragging-pos pos))
+           :on-touch-end (fn [e]
+                           (let [touch (aget (.. e -changedTouches) 0)
+                                 to (find-pos-at (.. touch -clientX) (.. touch -clientY))]
+                             (do-drop! @*dragging-pos to)
+                             (reset! *dragging-pos nil)))}
+          [card-img card-idx]])])))
 
 (defn blackboard [& children]
   (into [:div {:class (str "bg-[" color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}]
