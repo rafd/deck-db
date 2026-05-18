@@ -3,10 +3,8 @@
    [reagent.core :as r]
    [codeck.ui.common :as ui]
    [codeck.ui.tabs.decode-by-hand :as tab-decode-by-hand]
-   [codeck.ui.tabs.decode-img :as tab-decode-img]
    [codeck.ui.tabs.encode-by-hand :as tab-encode-by-hand]
-   [codeck.ui.tabs.encode-decode :as tab-encode-decode]
-   [codeck.ui.tabs.encode-img :as tab-encode-img]))
+   [codeck.ui.tabs.encode-decode :as tab-encode-decode]))
 
 (defonce active-tab-id (r/atom :tab/encode-decode))
 
@@ -19,13 +17,7 @@
          :tab/view-fn tab-encode-by-hand/tab}
         {:tab/id :tab/decode-by-hand
          :tab/label "Decode by Hand"
-         :tab/view-fn tab-decode-by-hand/tab}
-        {:tab/id :tab/encode-img
-         :tab/label "enc.img"
-         :tab/view-fn tab-encode-img/tab}
-        {:tab/id :tab/decode-img
-         :tab/label "dec.img"
-         :tab/view-fn tab-decode-img/tab}]
+         :tab/view-fn tab-decode-by-hand/tab}]
        (map (fn [t]
               [(:tab/id t) t]))
        (into {})))
@@ -70,7 +62,7 @@
    {:class (str "min-h-screen bg-[" ui/color-bg-app "]")}
    [:div
     {:class "mx-auto"
-     :style {:max-width (+ 32 ui/width)}}
+     :style {:max-width (+ 40 ui/width)}}
     [header]
     [tab-nav]
     [:div {:class "p-4"}

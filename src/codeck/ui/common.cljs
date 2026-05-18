@@ -21,7 +21,7 @@
 (def width (+ (* 13 card-width-px)
               (* 12 card-gap-px)))
 
-(def img-cell-px 24)
+(def img-cell-px 16)
 (def img-gap-px 0)
 
 (def textarea-class
@@ -95,18 +95,8 @@
                              (reset! *dragging-pos nil)))}
           [card-img card-idx]])])))
 
-(defn card-grid [perm]
-  [:div
-   {:class "flex flex-wrap"
-    :style {:gap (str card-gap-px "px")
-            :width (str width "px")}}
-   (for [[pos card-idx] (map-indexed vector perm)]
-     ^{:key pos}
-     [card-img card-idx])])
-
 (defn blackboard [& children]
   (into [:div {:class (str "bg-[" color-bg-surface "] rounded-lg px-4 py-3 overflow-x-auto mb-4")}]
         children))
 
-(defn arrow []
-  [:img {:src "down.png" :width "64px" :class "mx-auto"}])
+
