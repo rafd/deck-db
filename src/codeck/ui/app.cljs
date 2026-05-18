@@ -2,25 +2,21 @@
   (:require
    [reagent.core :as r]
    [codeck.ui.common :as ui]
-   [codeck.ui.tabs.decode :as tab-decode]
    [codeck.ui.tabs.decode-by-hand :as tab-decode-by-hand]
    [codeck.ui.tabs.decode-img :as tab-decode-img]
-   [codeck.ui.tabs.encode :as tab-encode]
    [codeck.ui.tabs.encode-by-hand :as tab-encode-by-hand]
+   [codeck.ui.tabs.encode-decode :as tab-encode-decode]
    [codeck.ui.tabs.encode-img :as tab-encode-img]))
 
-(defonce active-tab-id (r/atom :tab/encode))
+(defonce active-tab-id (r/atom :tab/encode-decode))
 
 (def tabs
-  (->> [{:tab/id :tab/encode
-         :tab/label "Encode"
-         :tab/view-fn tab-encode/tab}
+  (->> [{:tab/id :tab/encode-decode
+         :tab/label "Encode / Decode"
+         :tab/view-fn tab-encode-decode/tab}
         {:tab/id :tab/encode-by-hand
          :tab/label "Encode by Hand"
          :tab/view-fn tab-encode-by-hand/tab}
-        {:tab/id :tab/decode
-         :tab/label "Decode"
-         :tab/view-fn tab-decode/tab}
         {:tab/id :tab/decode-by-hand
          :tab/label "Decode by Hand"
          :tab/view-fn tab-decode-by-hand/tab}

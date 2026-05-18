@@ -109,4 +109,4 @@
         children))
 
 (defn arrow []
-  [:img {:src "down.png" :width "128px" :class "mx-auto"}])
+  [:img {:src "down.png" :width "64px" :class "mx-auto"}])

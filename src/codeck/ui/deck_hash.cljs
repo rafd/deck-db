@@ -51,7 +51,7 @@
 
 
 
-(defn in-view [{:keys [*string *deck read-only?]}]
+(defn in-view [{:keys [*string *deck read-only? on-perm-change!]}]
   [:textarea
    {:class (str "w-full font-mono text-sm bg-[" ui/color-bg-dark "] text-[" ui/color-text-accent "] "
                 "rounded-md p-2 resize-none focus:outline-none break-all")
@@ -62,7 +62,8 @@
                  (let [v (.. e -target -value)]
                    (reset! *string v)
                    (when-let [p (str->perm v)]
-                     (reset! *deck p))))}])
+                     (reset! *deck p)
+                     (when on-perm-change! (on-perm-change! p)))))}])
 
 (defn out-view [perm]
   [in-view {:read-only? true
