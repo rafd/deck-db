@@ -1,16 +1,13 @@
 (ns codeck.ui.tabs.encode-by-hand
   (:require
-   [clojure.string :as str]
    [reagent.core :as r]
    [codeck.codec :as codec]
    [codeck.ui.tabs.by-hand-common :as bhc]
+   [codeck.ui.state :as s]
    [codeck.ui.common :as ui]))
 
-(def *example-text (r/atom "Hello, world!"))
-(def *ex (r/reaction (codec/encode-steps @*example-text)))
-(def *ex-bigint-steps (r/reaction (codec/text->bigint-steps @*example-text)))
-(def *ex-msg-len (r/reaction (count @*example-text)))
-(def *ex-pad-len (r/reaction (- codec/max-chars @*ex-msg-len)))
+(def *ex (r/reaction (codec/encode-steps @s/*text)))
+(def *ex-bigint-steps (r/reaction (codec/text->bigint-steps @s/*text)))
 
 (defn tab []
   [:div {:class (str "text-[" ui/color-text-secondary "] pb-10 font-mono")}
@@ -31,11 +28,9 @@
     [bhc/step-header "Step 1" "Write Your Message"]
 
     [:input {:class ui/textarea-class
-             :value @*example-text
+             :value @s/*text
              :on-change (fn [e]
-                          (->> (.. e -target -value)
-                               codec/sanitize
-                               (reset! *example-text)))}]
+                          (s/set-text! (.. e -target -value)))}]
 
     [:p {:class (str "text-[" ui/color-text "]")}
      "Use only characters from the table below. Maximum " codec/max-chars " characters. "

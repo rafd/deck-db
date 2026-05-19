@@ -64,14 +64,12 @@
 
 (defn rearrangeable-deck
   "A drag-and-drop (mouse + touch) card grid.
-   *perm     — atom holding the current permutation vector
-   on-drop!  — zero-arg callback called after each successful reorder"
-  [*perm on-drop!]
+   *perm     — atom holding the current permutation vector"
+  [*perm]
   (let [*dragging-pos (r/atom nil)
         do-drop! (fn [from to]
                    (when (and from to (not= from to))
-                     (swap! *perm reorder from to)
-                     (on-drop!)))]
+                     (swap! *perm reorder from to)))]
     (fn [*perm _]
       [:div {:class "flex flex-wrap"}
        (for [[pos card-idx] (map-indexed vector @*perm)]
